@@ -27,6 +27,11 @@ jobs:
       - name: Run Maven Tests
         run: mvn clean test -Dpmd.skip=true -Dmaven.test.failure.ignore=true
 
+      - name: Check JaCoCo Report
+        run: |
+            ls -la target/site/jacoco/
+            grep -o 'counter type="LINE"[^>]*' target/site/jacoco/jacoco.xml | head
+
       - name: Publish JaCoCo Report
         id: jacoco
         uses: madrapps/jacoco-report@v1.7.2
