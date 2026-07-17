@@ -24,19 +24,21 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Run Maven Verify
+      - name: Run Maven Tests
         run: mvn clean test -Dpmd.skip=true -Dmaven.test.failure.ignore=true
 
-      - name: Upload JaCoCo Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: target/site/jacoco/
-
       - name: Publish JaCoCo Report
+        id: jacoco
         uses: madrapps/jacoco-report@v1.7.2
         with:
           paths: target/site/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 80
-          title: "JaCoCo Code Coverage Report"
+          min-coverage-changed-files: 80
+          title: JaCoCo Code Coverage Report
+
+      - name: Coverage Summary
+        run: |
+          echo "## JaCoCo Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "- Overall Coverage: ${{ steps.jacoco.outputs.coverage-overall }}%" >> $GITHUB_STEP_SUMMARY
+          echo "- Changed Files Coverage: ${{ steps.jacoco.outputs.coverage-changed-files }}%" >> $GITHUB_STEP_SUMMARY
