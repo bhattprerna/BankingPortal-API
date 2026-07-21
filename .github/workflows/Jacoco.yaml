@@ -40,3 +40,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 80
           title: "JaCoCo Code Coverage Report"
+          
